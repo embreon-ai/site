@@ -50,7 +50,8 @@ export async function POST(req: Request) {
       method: "POST",
       headers: {
         apikey: key,
-        Authorization: `Bearer ${key}`,
+        // Legacy service_role keys are JWTs and go in Authorization too; new sb_secret_ keys only need apikey.
+        ...(key.startsWith("eyJ") ? { Authorization: `Bearer ${key}` } : {}),
         "Content-Type": "application/json",
         Prefer: "resolution=ignore-duplicates,return=minimal",
       },
